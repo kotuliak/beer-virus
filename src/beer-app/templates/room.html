@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Room</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/template.css') }}">
+</head>
+<body>
+    <div>
+        <a href="{{ url_for('home') }}">Home</a>
+    </div>
+    
+    <h1> Welcome to this room </h1>
+    
+    <p>Current room is {{ room_id }}</p>
+
+    <ul id="users">
+        {% include 'list_users.html' %}
+    </ul>
+
+    <p id="result"><p>
+    
+    <form action="/new-user" method="post" id="add-user">
+        <p><input type="text" name="new-name"></p>
+        <input type="submit" value="Add task">
+    </form>
+</body>
+<script>
+    function addSubmit(ev) {
+      ev.preventDefault();
+      var request = new XMLHttpRequest();
+      request.addEventListener('load', addShow);
+      request.open('POST', {{ url_for('add')|tojson }});
+      request.send(new FormData(this));
+    }
+
+    function addShow() {
+      var data = this.responseText;
+      console.log(data)
+      document.getElementById("users").innerHTML = data;
+
+    }
+
+    var form = document.getElementById('add-user');
+    form.addEventListener('submit', addSubmit);
+  </script>
