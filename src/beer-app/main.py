@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from flask import request
 from flask import jsonify
+from cls_users import Users
 
 app = Flask(__name__)
 
@@ -30,6 +31,8 @@ def room():
         id = int(request.args['id'])
     else:
        return "Error 404: Room not found."
+
+    a = Users("jakub")
 
     users=[{"name":"a"},{"name":"a"},{"name":"a"}]
 
