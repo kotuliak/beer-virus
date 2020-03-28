@@ -5,12 +5,11 @@
     <title>BeerVirus</title>
   </head>
   <body>
-    {% extends "template.html" %}
-    {% block content %}
 
     <h1> My First Try Using Flask </h1>
     <p> Flask is Fun </p>
 
-    {% endblock %}
+    <a href="{{ url_for('about') }}">About</a>
+
   </body>
 </html>
