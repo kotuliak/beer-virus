@@ -1,7 +1,7 @@
 class Users:
   def __init__(self, name):
     self.name = name
-    self.state = "placeholder_for_state"
+    self.state = "Healthy"
 
   def get_state(self):
     return self.state

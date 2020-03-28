@@ -26,7 +26,14 @@ class Room:
             if self.user_locations[user] in infected_locations:
                 self.users[user].infect()
 
-    
+    def check_game_status(self):
+        ind = True
+        for user in self.users:
+            if self.users[user].get_state() == "Healthy":
+                ind = False
+            self.user_locations[user] = None
+        if ind:
+            print("Game Over")
 
 r1 = Room()
 r1.create_user('Michal')
@@ -38,3 +45,5 @@ r1.users['Matej'].infect()
 r1.assign_location('Matej', "Bathroom")
 print(r1.user_locations)
 print(r1.users['Michal'].get_state())
+r1.check_game_status()
+print(r1.user_locations)
