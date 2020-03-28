@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Joining Room</title>
+</head>
+<body>
+
+<p>About to join room {{ room_id }}</p>
+<form action="/api/room" method="POST" id="join-room">
+    <p><input type="text" name="user_name"> Enter your name</p>
+    <input type="number" name="room_id" value={{ room_id }} hidden>
+    <input type="submit" value="Join Room">
+</form>
+
+</body>
+</html>

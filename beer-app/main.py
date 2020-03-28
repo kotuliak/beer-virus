@@ -18,31 +18,33 @@ def about():
 
 @app.route('/api/room', methods=['GET', 'POST'])
 def room():
-    if 'id' in request.args:
-        id = int(request.args['id'])
+    if 'room_id' in request.form:
+        id = int(request.form['room_id'])
         for room in open_rooms:
             if id == room.id:
-                if 'name' in request.args:
-                    name = str(request.args['name'])
+                if 'user_name' in request.form:
+                    user_name = request.form['user_name']
+                    return render_template("room.html", room_id=id, user_name=user_name, users=[])
                 else:
-                    return "Error 404: User not found."
-
-                return render_template("room.html", room_id=id, users=open_rooms[0].users, your_user=open_rooms[0].get_user(name))
+                    return render_template("join_room.html", room_id=id)
 
     return "Error 404: Room not found."
+
 
 @app.route('/create_new_room', methods=['POST'])
 def create_new_room():
     new_room = Room()
     open_rooms.append(new_room)
-    return redirect("/api/room?id=" + str(new_room.id))
+    return redirect("/join_room?room_id=" + str(new_room.id))
 
-
-@app.route('/join_room', methods=['POST'])
+@app.route('/join_room', methods=['GET', 'POST'])
 def join_room():
-    room_id = request.form['room-id']
-    return redirect("/api/room?id=" + room_id)
+    if 'room_id' in request.args:
+        room_id = request.args['room_id']
+    elif 'room_id' in request.form:
+        room_id = request.form['room_id']
 
+    return render_template("join_room.html", room_id=room_id)
 
 @app.route("/add", methods=["POST"])
 def add():

@@ -10,9 +10,7 @@
         <a href="{{ url_for('home') }}">Home</a>
     </div>
     
-    <h1> Welcome to this room </h1>
-    
-    <p>Current room is {{ room_id }}</p>
+    <h1>Welcome {{ user_name }} to room {{ room_id }}</h1>
 
     <div id="user_text"> 
         {% include 'user.html' %}
