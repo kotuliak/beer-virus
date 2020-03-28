@@ -7,6 +7,4 @@ class Users:
   def check(self):
     print("You have user called " + self.name + " and you're " + self.state)
 
-u1 = Users("Jakub")
-u1.check()
 
