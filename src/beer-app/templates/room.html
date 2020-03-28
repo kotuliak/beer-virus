@@ -1,9 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>ROOM</title>
+    <meta charset="utf-8">
+    <title>Room</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/template.css') }}">
 </head>
 <body>
+    <div>
+        <a href="{{ url_for('home') }}">Home</a>
+    </div>
+    
+    <h1> Welcome to this room </h1>
+    
+    <p>Current room is {{ room_id }}</p>
+
     <ul id="users">
         {% include 'list_users.html' %}
     </ul>
@@ -34,4 +44,3 @@
     var form = document.getElementById('add-user');
     form.addEventListener('submit', addSubmit);
   </script>
-</html>
