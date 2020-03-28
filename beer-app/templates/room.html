@@ -20,33 +20,14 @@
         {% include 'list_users.html' %}
     </ul>
 
-    <p id="result"><p>
-    
-    <form action="/new-user" method="post" id="add-user">
-        <p><input type="text" name="new-name"></p>
-        <input type="submit" value="Add task">
-    </form>
-
     {% include 'choose_location.html' %}
 </body>
 <script>
-    function addSubmit(ev) {
-      ev.preventDefault();
-      var request = new XMLHttpRequest();
-      request.addEventListener('load', addShow);
-      request.open('POST', {{ url_for('add')|tojson }});
-      request.send(new FormData(this));
+    console.log(window.location.href)
+    if (!window.location.href.toString().endsWith("?room_id={{ room_id }}&user_name={{your_user.name}}")) {
+        window.location.href = window.location.href + "?room_id={{ room_id }}&user_name={{your_user.name}}"
     }
-
-    function addShow() {
-      var data = this.responseText;
-      console.log(data)
-      document.getElementById("users").innerHTML = data;
-
-    }
-
-    var form = document.getElementById('add-user');
-    form.addEventListener('submit', addSubmit);
+    
 
     function locationClick(ev) {
         ev.preventDefault();
@@ -54,7 +35,7 @@
         var request = new XMLHttpRequest();
         request.addEventListener('load', locationShow);
         request.open('POST', {{ url_for('add_location')|tojson }});
-        request.send(JSON.stringify({name:"{{your_user.name}}", location:ev.srcElement.innerText}));
+        request.send(JSON.stringify({name:"{{your_user.name}}", location:ev.srcElement.innerText,roomid:"{{room_id}}"}));
     }
 
     function locationShow() {

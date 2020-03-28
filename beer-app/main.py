@@ -19,12 +19,29 @@ def about():
 @app.route('/api/room', methods=['GET', 'POST'])
 def room():
     if 'room_id' in request.form:
+        print(request.form)
         id = int(request.form['room_id'])
         for room in open_rooms:
             if id == room.id:
                 if 'user_name' in request.form:
                     user_name = request.form['user_name']
-                    return render_template("room.html", room_id=id, user_name=user_name, users=[])
+                    your_user = room.get_user(user_name)
+                    if your_user is None:
+                        your_user = room.create_user(user_name)
+                    return render_template("room.html", room_id=id, your_user=your_user, users=room.users.values())
+                else:
+                    return render_template("join_room.html", room_id=id)
+    elif 'room_id' in request.args:
+        print(request.args)
+        id = int(request.args['room_id'])
+        for room in open_rooms:
+            if id == room.id:
+                if 'user_name' in request.args:
+                    user_name = request.args['user_name']
+                    your_user = room.get_user(user_name)
+                    if your_user is None:
+                        your_user = room.create_user(user_name)
+                    return render_template("room.html", room_id=id, your_user=your_user, users=room.users.values())
                 else:
                     return render_template("join_room.html", room_id=id)
 
@@ -46,21 +63,14 @@ def join_room():
 
     return render_template("join_room.html", room_id=room_id)
 
-@app.route("/add", methods=["POST"])
-def add():
-    a = request.form.get("new-name", 0, type=str)
-    users = [{"name": "a"}, {"name": "a"}, {"name": "a"}]
-    users.append({"name": a})
-    return render_template("list_users.html", users=users)
-
 @app.route("/add_location", methods=["POST"])
 def add_location():
     print(eval(request.data))
-    # a = request.form.get("new-name", 0, type=str)
-    # users=[{"name":"a"},{"name":"a"},{"name":"a"}]
-    # users.append({"name":a})
-    open_rooms[0].get_user(eval(request.data)['name']).location = eval(request.data)['location']
-    return render_template("user.html", your_user=open_rooms[0].get_user(eval(request.data)['name']))
+    for room in open_rooms:
+        if int(eval(request.data)['roomid']) == room.id:
+            room.get_user(eval(request.data)['name']).location = eval(request.data)['location']
+            room.assign_location(eval(request.data)['name'], eval(request.data)['location'])
+            return render_template("user.html", your_user=room.get_user(eval(request.data)['name']))
 
 
 if __name__ == "__main__":

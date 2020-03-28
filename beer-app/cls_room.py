@@ -10,6 +10,15 @@ class Room:
     def create_user(self, name):
         self.users[name] = Users(name)
         self.user_locations[name] = None
+        self.users[name].location = "Home"
+        return self.users[name]
+
+    def get_user(self, name):
+        print(name)
+        if name in self.users:
+            return self.users[name]
+        else:
+            return None
     
     def assign_location(self, name, location):
         self.user_locations[name] = location
@@ -37,15 +46,15 @@ class Room:
         if ind:
             print("Game Over")
 
-r1 = Room()
-r1.create_user('Michal')
-r1.create_user('Matej')
-print(r1.user_locations)
-r1.assign_location('Michal', 'Bathroom')
-print(r1.user_locations)
-r1.users['Matej'].infect()
-r1.assign_location('Matej', "Bathroom")
-print(r1.user_locations)
-print(r1.users['Michal'].get_state())
-r1.check_game_status()
-print(r1.user_locations)
+# r1 = Room()
+# r1.create_user('Michal')
+# r1.create_user('Matej')
+# print(r1.user_locations)
+# r1.assign_location('Michal', 'Bathroom')
+# print(r1.user_locations)
+# r1.users['Matej'].infect()
+# r1.assign_location('Matej', "Bathroom")
+# print(r1.user_locations)
+# print(r1.users['Michal'].get_state())
+# r1.check_game_status()
+# print(r1.user_locations)

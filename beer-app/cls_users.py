@@ -2,6 +2,7 @@ class Users:
   def __init__(self, name):
     self.name = name
     self.state = "Healthy"
+    self.location = "Home"
 
   def get_state(self):
     return self.state
@@ -18,5 +19,5 @@ class Users:
   def infect(self):
     self.state = 'Sick'
 
-u1 = Users("Jakub")
+# u1 = Users("Jakub")
 
