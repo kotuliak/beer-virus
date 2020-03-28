@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 
 #kubo edit
+
+.DS_Store
+.idea
