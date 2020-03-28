@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title>BeerVirus</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/template.css') }}">
+</head>
+<body>
+
+<h1> Welcome to BeerVirus </h1>
+
+<a href="{{ url_for('about') }}">About</a>
+
+<h2>Rooms</h2>
+
+<form action="/create_new_room" method="POST" id="create-room">
+    <input type="submit" value="Create new room">
+</form>
+
+<form action="/join_room" method="POST" id="join-room">
+    <p><input type="text" name="room-id"> Room ID</p>
+    <input type="submit" value="Join room">
+</form>
+
+</body>
+</html>
