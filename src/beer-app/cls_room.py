@@ -1,4 +1,3 @@
-import numpy as np
 from cls_users import Users
 
 class Room:
