@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ROOM</title>
+</head>
+<body>
+    <ul id="users">
+        {% include 'list_users.html' %}
+    </ul>
+
+    <p id="result"><p>
+    
+    <form action="/new-user" method="post" id="add-user">
+        <p><input type="text" name="new-name"></p>
+        <input type="submit" value="Add task">
+    </form>
+</body>
+<script>
+    function addSubmit(ev) {
+      ev.preventDefault();
+      var request = new XMLHttpRequest();
+      request.addEventListener('load', addShow);
+      request.open('POST', {{ url_for('add')|tojson }});
+      request.send(new FormData(this));
+    }
+
+    function addShow() {
+      var data = this.responseText;
+      console.log(data)
+      document.getElementById("users").innerHTML = data;
+
+    }
+
+    var form = document.getElementById('add-user');
+    form.addEventListener('submit', addSubmit);
+  </script>
+</html>
