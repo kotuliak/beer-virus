@@ -19,5 +19,4 @@ class Users:
     self.state = 'Sick'
 
 u1 = Users("Jakub")
-u1.check()
 
