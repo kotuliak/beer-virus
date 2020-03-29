@@ -83,8 +83,9 @@ class Room:
             print("Still waiting on " + str(remaining_votes) + " players to choose nomination for quarantine")
             raise Exception("Still waiting on " + str(remaining_votes) + " players to choose nomination for quarantine")
 
-        self.update_users_state()
         self.update_quarantine()
+        self.update_users_state()
+        self.heal_quarantined()
         self.reset_round()
         return self.update_game_status()
 
@@ -112,7 +113,6 @@ class Room:
         user.register_vote(self.get_user(vote))
         self.nbPlayersWhoVoted += 1
 
-
     ### GAME LOGIC
 
     def update_users_state(self):
@@ -123,9 +123,8 @@ class Room:
 
     def update_quarantine(self):
         for nomination, users_who_voted in self.get_votes_dict(self.users).items():
-            if len(users_who_voted)/len(self.users) > 0.500001:
+            if len(users_who_voted)/len(self.users) > 0.501:
                 nomination.quarantine()
-                nomination.state = State.HEALTHY
 
     def update_game_status(self):
         if self.check_all_same_state(self.users, State.HEALTHY):
@@ -134,6 +133,11 @@ class Room:
             self.game_state = GameState.BAD_GUYS_WON
         else:
             self.game_state = GameState.PLAYING
+
+    def heal_quarantined(self):
+        for user in self.users:
+            if user.state == State.QUARANTINED
+                user.state = State.HEALTHY
 
     @staticmethod
     def check_all_same_state(users, state):
