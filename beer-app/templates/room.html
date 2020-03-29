@@ -10,12 +10,7 @@
              window.location.href = window.location.href + "?room_id={{ room_id }}&user_name={{your_user.name}}"
         }
     
-        window.setInterval(function() {
-            var request = new XMLHttpRequest();
-            request.addEventListener('load', usersShow);
-            request.open('POST', {{ url_for('show_users')|tojson }});
-            request.send(JSON.stringify({name:"{{your_user.name}}", roomid:"{{room_id}}"}));
-        }, 1000);
+        
     
     
         function usersShow() {
@@ -87,6 +82,14 @@
             it = i.valueOf()
             butloc.addEventListener('click', locationClick);
         }
+
+        window.setInterval(function() {
+            sleep(1000)
+            var request = new XMLHttpRequest();
+            request.addEventListener('load', usersShow);
+            request.open('POST', {{ url_for('show_users')|tojson }});
+            request.send(JSON.stringify({name:"{{your_user.name}}", roomid:"{{room_id}}"}));
+        }, 1000);
     </script>
 </body>
 

@@ -76,6 +76,13 @@ def add_location():
             room.assign_location(eval(request.data)['name'], eval(request.data)['location'])
             return render_template("user.html", your_user=room.get_user(eval(request.data)['name']))
 
+@app.route("/add_quarantine", methods=["POST"])
+def add_quarantine():
+    print(eval(request.data))
+    for room in open_rooms:
+        if int(eval(request.data)['roomid']) == room.id:
+            return render_template("list_users.html", users=room.users)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
