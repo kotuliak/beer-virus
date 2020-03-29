@@ -9,7 +9,7 @@ class Room:
         self.users = []
         self.game_state = GameState.NOT_STARTED
         self.round = -1
-        self.nbPlayersWhoPlayedTheirTurn = -1
+        self.nbPlayersWhoMoved = -1
         self.nbPlayersWhoVoted = -1
 
     ### ROOM LOGIC
@@ -57,7 +57,7 @@ class Room:
         print("Starting game")
         self.game_state = GameState.PLAYING
         self.round = 1
-        self.nbPlayersWhoPlayedTheirTurn = 0
+        self.nbPlayersWhoMoved = 0
         self.nbPlayersWhoVoted = 0
 
         for user in self.users:
@@ -68,7 +68,7 @@ class Room:
         print("patient zero is " + infected_user.name)
 
     def next_round(self):
-        remaining_locations = len(self.users) - self.nbPlayersWhoPlayedTheirTurn
+        remaining_locations = len(self.users) - self.nbPlayersWhoMoved
         if remaining_locations > 0:
             print("Still waiting on " + str(remaining_locations) + " players to choose location")
             raise Exception("Still waiting on " + str(remaining_locations) + " players to choose location")
@@ -84,7 +84,7 @@ class Room:
 
     def reset_round(self):
         self.round += 1
-        self.nbPlayersWhoPlayedTheirTurn = 0
+        self.nbPlayersWhoMoved = 0
         self.nbPlayersWhoVoted = 0
         print("resetting round")
 
@@ -93,7 +93,7 @@ class Room:
     def move_user_location(self, name, location):
         user = self.get_user(name)
         user.move_location(location)
-        self.nbPlayersWhoPlayedTheirTurn += 1
+        self.nbPlayersWhoMoved += 1
 
     def register_user_vote(self, name, nomination):
         user = self.get_user(name)
