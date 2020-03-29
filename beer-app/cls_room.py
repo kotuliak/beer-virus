@@ -2,7 +2,6 @@ import random
 from state import State
 from game_state import GameState
 
-
 class Room:
     def __init__(self):
         self.id = random.randrange(0, 10000)
@@ -95,10 +94,11 @@ class Room:
         user.move_location(location)
         self.nbPlayersWhoMoved += 1
 
-    def register_user_vote(self, name, nomination):
+    def register_user_vote(self, name, vote):
         user = self.get_user(name)
-        user.register_vote(nomination)
+        user.register_vote(vote)
         self.nbPlayersWhoVoted += 1
+
 
     ### GAME LOGIC
 
@@ -107,6 +107,11 @@ class Room:
             if self.contains_infected(users_in_location):
                 for user in users_in_location:
                     user.infect()
+
+    def update_quarantine(self):
+        for nomination, users_who_voted in self.get_votes_dict(self.users).items():
+            if len(users_who_voted) + 1 == len(self.users):
+                nomination.quarantine()
 
     def update_game_status(self):
         if self.check_all_same_state(self.users, State.HEALTHY):
@@ -132,6 +137,16 @@ class Room:
             else:
                 locations_dict[user.location] = [user]
         return locations_dict
+
+    @staticmethod
+    def get_votes_dict(users):
+        votes_dict = dict()
+        for user in users:
+            if user.vote in votes_dict:
+                votes_dict[user.vote].append(user)
+            else:
+                votes_dict[user.vote] = [user]
+        return votes_dict
 
     @staticmethod
     def contains_infected(users_in_location):
