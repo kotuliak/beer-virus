@@ -98,6 +98,7 @@ class Room:
     def register_user_vote(self, name, nomination):
         user = self.get_user(name)
         user.register_vote(nomination)
+        self.nbPlayersWhoVoted += 1
         return None
 
     ### GAME LOGIC
