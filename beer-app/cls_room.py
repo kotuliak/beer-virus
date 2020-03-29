@@ -53,7 +53,7 @@ class Room:
 
     def start(self):
         print("Starting game")
-        self.game_state = GameState.STARTED
+        self.game_state = GameState.PLAYING
         self.round = 1
         self.nbPlayersWhoPlayedTheirTurn = 0
 
