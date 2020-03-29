@@ -7,6 +7,7 @@ class User:
 		self.state = State.HEALTHY
 		self.location = Location.HOME
 		self.vote = None
+		self.admin = False
 
 	def heal(self):
 		print("User " + self.name + " is HEALTHY")
@@ -25,8 +26,5 @@ class User:
 		self.vote = new_vote
 
 	def move_location(self, new_location):
-		if self.location == new_location:
-			raise Exception("User is already in that location")
-		else:
-			print("Moving user " + self.name + " to new location " + str(new_location))
-			self.location = new_location
+		print("Moving user " + self.name + " to new location " + str(new_location))
+		self.location = new_location

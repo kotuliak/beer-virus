@@ -23,6 +23,12 @@
                 eval(scripts[ix].text);
             }
         }
+
+        function yourUserShow() {
+          var data = this.responseText;
+          console.log(data)
+          document.getElementById("user_text").innerHTML = data;
+        }
     
         function locationClick(ev) {
             ev.preventDefault();
@@ -59,6 +65,20 @@
                 eval(scripts[ix].text);
             }
         }
+
+        function resetGame(ev){
+            ev.preventDefault();
+            var request = new XMLHttpRequest();
+            request.open('POST', {{ url_for('reset_game')|tojson }});
+            request.send(JSON.stringify({roomid:"{{room_id}}"}));
+        }
+
+        function nextGame(ev){
+            ev.preventDefault();
+            var request = new XMLHttpRequest();
+            request.open('POST', {{ url_for('next_game')|tojson }});
+            request.send(JSON.stringify({roomid:"{{room_id}}"}));
+        }
     </script>
 </head>
 <body>
@@ -81,9 +101,13 @@
     <p>
     </p>
     <br>
-    <button>FINISH ROUND</button>
+     
+    {% if your_user.admin %}
+        {% include 'admin.html' %}
+    {% endif %}
+
     <script>
-        for (i = 0; i < 5; i++) {
+        for (i = 0; i < {{locations | length}}; i++) {
             console.log('l' + i.toString())
             var butloc = document.getElementById('l' + i.toString());
             console.log(butloc)
@@ -96,7 +120,17 @@
             request.addEventListener('load', usersShow);
             request.open('POST', {{ url_for('show_users')|tojson }});
             request.send(JSON.stringify({name:"{{your_user.name}}", roomid:"{{room_id}}"}));
+
+            var request = new XMLHttpRequest();
+            request.addEventListener('load', yourUserShow);
+            request.open('POST', {{ url_for('show_your_user')|tojson }});
+            request.send(JSON.stringify({name:"{{your_user.name}}", roomid:"{{room_id}}"}));
         }, 1000);
+
+        var reset = document.getElementById('reset')
+        reset.addEventListener('click', resetGame);
+        var next = document.getElementById('next')
+        next.addEventListener('click', nextGame);
     </script>
 </body>
 

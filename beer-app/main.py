@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, url_for
 from cls_room import Room
 from cls_user import User
+from location import Location
 
 app = Flask(__name__)
 
@@ -36,7 +37,9 @@ def room():
             your_user = room.get_user(user_name)
             if your_user is None:
                 your_user = room.add_user(User(user_name))
-            return render_template("room.html", room_id=room_id, your_user=your_user, users=room.users)
+            
+            locations = [Location(i).name for i in range(len(Location))]
+            return render_template("room.html", room_id=room_id, your_user=your_user, users=room.users, locations=locations)
 
     return "Error 404: Room not found."
 
@@ -66,13 +69,20 @@ def show_users():
         if int(eval(request.data)['roomid']) == room.id:
             return render_template("list_users.html", users=room.users, your_user=room.get_user(eval(request.data)['name']))
 
+@app.route("/show_your_user", methods=["POST"])
+def show_your_user():
+    print(eval(request.data))
+    for room in open_rooms:
+        if int(eval(request.data)['roomid']) == room.id:
+            return render_template("user.html", your_user=room.get_user(eval(request.data)['name']))
+
 
 @app.route("/add_location", methods=["POST"])
 def add_location():
     print(eval(request.data))
     for room in open_rooms:
         if int(eval(request.data)['roomid']) == room.id:
-            room.get_user(eval(request.data)['name']).move_location(eval(request.data)['location'])
+            room.move_user_location(eval(request.data)['name'], eval(request.data)['location'])
             return render_template("user.html", your_user=room.get_user(eval(request.data)['name']))
 
 @app.route("/add_quarantine", methods=["POST"])
@@ -80,9 +90,24 @@ def add_quarantine():
     print(eval(request.data))
     for room in open_rooms:
         if int(eval(request.data)['roomid']) == room.id:
-            room.get_user(eval(request.data)['name']).register_vote(eval(request.data)['quarantine'])
+            room.register_user_vote(eval(request.data)['name'], eval(request.data)['quarantine'])
             return render_template("list_users.html", users=room.users, your_user=room.get_user(eval(request.data)['name']))
 
+@app.route("/reset_game", methods=["POST"])
+def reset_game():
+    print(eval(request.data))
+    for room in open_rooms:
+        if int(eval(request.data)['roomid']) == room.id:
+            room.start()
+            return ""
+
+@app.route("/next_game", methods=["POST"])
+def next_game():
+    print(eval(request.data))
+    for room in open_rooms:
+        if int(eval(request.data)['roomid']) == room.id:
+            room.next_round()
+            return ""
 
 if __name__ == "__main__":
     app.run(debug=True)

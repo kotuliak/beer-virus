@@ -1,6 +1,7 @@
 import random
 from state import State
 from game_state import GameState
+from location import Location
 
 class Room:
     def __init__(self):
@@ -17,6 +18,9 @@ class Room:
         for existing_user in self.users:
             if user.name == existing_user.name:
                 raise NameError("User with name " + user.name + " already exists. Please pick a new name.")
+
+        if len(self.users) == 0:
+            user.admin=True
 
         self.users.append(user)
         print("added user " + user.name + " to the room")
@@ -91,7 +95,7 @@ class Room:
 
     def move_user_location(self, name, location):
         user = self.get_user(name)
-        user.move_location(location)
+        user.move_location(Location[location])
         self.nbPlayersWhoMoved += 1
 
     def register_user_vote(self, name, vote):

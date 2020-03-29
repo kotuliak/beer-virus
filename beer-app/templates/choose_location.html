@@ -1,6 +1,4 @@
 Pick Locations:
-<button id="l0">Location 1</button>
-<button id="l1">Location 2</button>
-<button id="l2">Location 3</button>
-<button id="l3">Location 4</button>
-<button id="l4">Location 5</button>
+{% for location in locations %}
+<button id="l{{loop.index - 1}}">{{location}}</button>
+{% endfor %}
