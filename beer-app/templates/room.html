@@ -4,6 +4,59 @@
     <meta charset="utf-8">
     <title>Room</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/template.css') }}">
+    <script>
+
+        if (!window.location.href.toString().endsWith("?room_id={{ room_id }}&user_name={{your_user.name}}")) {
+             window.location.href = window.location.href + "?room_id={{ room_id }}&user_name={{your_user.name}}"
+        }
+    
+        window.setInterval(function() {
+            var request = new XMLHttpRequest();
+            request.addEventListener('load', usersShow);
+            request.open('POST', {{ url_for('show_users')|tojson }});
+            request.send(JSON.stringify({name:"{{your_user.name}}", roomid:"{{room_id}}"}));
+        }, 1000);
+    
+    
+        function usersShow() {
+          var data = this.responseText;
+          console.log(data)
+          document.getElementById("users").innerHTML = data;
+    
+        }
+    
+        function locationClick(ev) {
+            ev.preventDefault();
+            console.log(ev.srcElement.innerText)
+            var request = new XMLHttpRequest();
+            request.addEventListener('load', locationShow);
+            request.open('POST', {{ url_for('add_location')|tojson }});
+            request.send(JSON.stringify({name:"{{your_user.name}}", location:ev.srcElement.innerText,roomid:"{{room_id}}"}));
+        }
+    
+        function locationShow() {
+          var data = this.responseText;
+          console.log(data)
+          document.getElementById("user_text").innerHTML = data;
+    
+        }
+    
+        function quarantineClick(ev) {
+            ev.preventDefault();
+            console.log(ev.srcElement.innerText)
+            var request = new XMLHttpRequest();
+            request.addEventListener('load', quarantineShow);
+            request.open('POST', {{ url_for('add_quarantine')|tojson }});
+            request.send(JSON.stringify({name:"{{your_user.name}}", location:ev.srcElement.innerText,roomid:"{{room_id}}"}));
+        }
+    
+        function quarantineShow() {
+          var data = this.responseText;
+          console.log(data)
+          document.getElementById("user_text").innerHTML = data;
+    
+        }
+    </script>
 </head>
 <body>
     <div>
@@ -21,29 +74,19 @@
     </ul>
 
     {% include 'choose_location.html' %}
+
+    <p>
+    </p>
+    <br>
+    <button>FINISH ROUND</button>
+    <script>
+        for (i = 0; i < 5; i++) {
+            console.log('l' + i.toString())
+            var butloc = document.getElementById('l' + i.toString());
+            console.log(butloc)
+            it = i.valueOf()
+            butloc.addEventListener('click', locationClick);
+        }
+    </script>
 </body>
-<script>
-    function locationClick(ev) {
-        ev.preventDefault();
-        console.log(ev.srcElement.innerText)
-        var request = new XMLHttpRequest();
-        request.addEventListener('load', locationShow);
-        request.open('POST', {{ url_for('add_location')|tojson }});
-        request.send(JSON.stringify({name:"{{your_user.name}}", location:ev.srcElement.innerText,roomid:"{{room_id}}"}));
-    }
 
-    function locationShow() {
-      var data = this.responseText;
-      console.log(data)
-      document.getElementById("user_text").innerHTML = data;
-
-    }
-
-    for (i = 0; i < 5; i++) {
-        console.log('l' + i.toString())
-        var butloc = document.getElementById('l' + i.toString());
-        console.log(butloc)
-        it = i.valueOf()
-        butloc.addEventListener('click', locationClick);
-    }
-</script>

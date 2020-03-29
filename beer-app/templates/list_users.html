@@ -1,3 +1,12 @@
 {% for user in users %}
-    <li>{{ user.name }}</li>
+    <li>{{ user.name }}<button id="but{{user.name}}">QUARANTINE HIM!!!</button></li>
 {% endfor %}
+<script>
+    {% for user in users %}
+        but{{ user.name }} = document.getElementById("but{{ user.name }}");
+        console.log(but{{ user.name }})
+        // it = i.valueOf()
+        but{{ user.name }}.addEventListener('click', quarantineClick);
+    {% endfor %}
+
+</script>

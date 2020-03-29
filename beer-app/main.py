@@ -58,6 +58,14 @@ def join_room():
     return "Error 404: Room not found."
 
 
+@app.route("/show_users", methods=["POST"])
+def show_users():
+    print(eval(request.data))
+    for room in open_rooms:
+        if int(eval(request.data)['roomid']) == room.id:
+            return render_template("list_users.html", users=room.users.values())
+
+
 @app.route("/add_location", methods=["POST"])
 def add_location():
     print(eval(request.data))
