@@ -6,6 +6,7 @@ class User:
     self.name = name
     self.state = State.HEALTHY
     self.location = Location.HOME
+    self.vote = None
 
   def heal(self):
     print("User " + self.name + " is HEALTHY")
