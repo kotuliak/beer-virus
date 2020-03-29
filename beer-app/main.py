@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, url_for
 from cls_room import Room
 
 app = Flask(__name__)
@@ -18,13 +18,17 @@ def about():
 
 @app.route('/room', methods=['GET', 'POST'])
 def room():
-    if len(request.form) == 0 and len(request.args) > 0:
-        room_id = int(request.args['room_id'])
-        user_name = request.args['user_name']
-
-    if len(request.args) == 0 and len(request.form) > 0:
-        room_id = int(request.form['room_id'])
-        user_name = request.form['user_name']
+    try:
+        if len(request.form) == 0 and len(request.args) > 0:
+            room_id = int(request.args['room_id'])
+            user_name = request.args['user_name']
+        elif len(request.args) == 0 and len(request.form) > 0:
+            room_id = int(request.form['room_id'])
+            user_name = request.form['user_name']
+        else:
+            raise Exception("Request args or form empty")
+    except Exception as e:
+        return "<p>An error occurred:</p><p>" + str(e) + "</p><a href=" + url_for('home') + ">Go Back Home</a>"
 
     for room in open_rooms:
         if room_id == room.id:
