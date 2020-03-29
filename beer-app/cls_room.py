@@ -21,6 +21,7 @@ class Room:
 
         self.users.append(user)
         print("added user " + user.name + " to the room")
+        return user
 
     def add_users(self, users):
         for user in users:
