@@ -2,6 +2,7 @@ import random
 from state import State
 from game_state import GameState
 
+
 class Room:
     def __init__(self):
         self.id = random.randrange(0, 10000)
@@ -78,6 +79,7 @@ class Room:
             raise Exception("Still waiting on " + str(remaining_votes) + " players to choose nomination for quarantine")
 
         self.update_users_state()
+        self.update_quarantine()
         self.reset_round()
         return self.update_game_status()
 
@@ -110,7 +112,7 @@ class Room:
 
     def update_quarantine(self):
         for nomination, users_who_voted in self.get_votes_dict(self.users).items():
-            if len(users_who_voted) + 1 == len(self.users):
+            if len(users_who_voted)/len(self.users) > 0.500001:
                 nomination.quarantine()
 
     def update_game_status(self):
