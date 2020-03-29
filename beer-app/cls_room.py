@@ -136,7 +136,7 @@ class Room:
 
     def heal_quarantined(self):
         for user in self.users:
-            if user.state == State.QUARANTINED
+            if user.state == State.QUARANTINED:
                 user.state = State.HEALTHY
 
     @staticmethod
