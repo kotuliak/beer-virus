@@ -17,7 +17,11 @@
           var data = this.responseText;
           console.log(data)
           document.getElementById("users").innerHTML = data;
-    
+          var scripts = document.getElementById("users").getElementsByTagName('script');
+            for (var ix = 0; ix < scripts.length; ix++) {
+                console.log(scripts[ix].text)
+                eval(scripts[ix].text);
+            }
         }
     
         function locationClick(ev) {
@@ -38,18 +42,22 @@
     
         function quarantineClick(ev) {
             ev.preventDefault();
-            console.log(ev.srcElement.innerText)
+            console.log(ev.srcElement.id.slice(3))
             var request = new XMLHttpRequest();
             request.addEventListener('load', quarantineShow);
             request.open('POST', {{ url_for('add_quarantine')|tojson }});
-            request.send(JSON.stringify({name:"{{your_user.name}}", location:ev.srcElement.innerText,roomid:"{{room_id}}"}));
+            request.send(JSON.stringify({name:"{{your_user.name}}",roomid:"{{room_id}}",quarantine: ev.srcElement.id.slice(3)}));
         }
     
         function quarantineShow() {
-          var data = this.responseText;
-          console.log(data)
-          document.getElementById("user_text").innerHTML = data;
-    
+            var data = this.responseText;
+            console.log(data)
+            document.getElementById("users").innerHTML = data;
+            var scripts = document.getElementById("users").getElementsByTagName('script');
+            for (var ix = 0; ix < scripts.length; ix++) {
+                console.log(scripts[ix].text)
+                eval(scripts[ix].text);
+            }
         }
     </script>
 </head>
@@ -84,7 +92,6 @@
         }
 
         window.setInterval(function() {
-            sleep(1000)
             var request = new XMLHttpRequest();
             request.addEventListener('load', usersShow);
             request.open('POST', {{ url_for('show_users')|tojson }});

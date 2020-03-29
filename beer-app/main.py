@@ -64,7 +64,7 @@ def show_users():
     print(eval(request.data))
     for room in open_rooms:
         if int(eval(request.data)['roomid']) == room.id:
-            return render_template("list_users.html", users=room.users)
+            return render_template("list_users.html", users=room.users, your_user=room.get_user(eval(request.data)['name']))
 
 
 @app.route("/add_location", methods=["POST"])
@@ -72,8 +72,7 @@ def add_location():
     print(eval(request.data))
     for room in open_rooms:
         if int(eval(request.data)['roomid']) == room.id:
-            room.get_user(eval(request.data)['name']).location = eval(request.data)['location']
-            room.assign_location(eval(request.data)['name'], eval(request.data)['location'])
+            room.get_user(eval(request.data)['name']).move_location(eval(request.data)['location'])
             return render_template("user.html", your_user=room.get_user(eval(request.data)['name']))
 
 @app.route("/add_quarantine", methods=["POST"])
@@ -81,7 +80,8 @@ def add_quarantine():
     print(eval(request.data))
     for room in open_rooms:
         if int(eval(request.data)['roomid']) == room.id:
-            return render_template("list_users.html", users=room.users)
+            room.get_user(eval(request.data)['name']).register_vote(eval(request.data)['quarantine'])
+            return render_template("list_users.html", users=room.users, your_user=room.get_user(eval(request.data)['name']))
 
 
 if __name__ == "__main__":

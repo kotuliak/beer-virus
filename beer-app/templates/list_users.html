@@ -1,7 +1,12 @@
 {% for user in users %}
+    {% if user.name == your_user.vote %}
+    <li class="danger">{{ user.name }}<button id="but{{user.name}}">QUARANTINE HIM!!!</button></li>
+    {% else %}
     <li>{{ user.name }}<button id="but{{user.name}}">QUARANTINE HIM!!!</button></li>
+    {% endif %}
 {% endfor %}
 <script>
+    console.log("aaaaaaa")
     {% for user in users %}
         but{{ user.name }} = document.getElementById("but{{ user.name }}");
         console.log(but{{ user.name }})
