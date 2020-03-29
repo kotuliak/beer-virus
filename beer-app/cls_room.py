@@ -1,5 +1,4 @@
 import random
-from cls_user import User
 from state import State
 from game_state import GameState
 
@@ -8,6 +7,7 @@ class Room:
     def __init__(self):
         self.id = random.randrange(0, 10000)
         self.users = []
+        self.game_state = GameState.NOT_STARTED
         self.round = -1
         self.nbPlayersWhoPlayedTheirTurn = -1
 
@@ -32,11 +32,31 @@ class Room:
                 print("found user " + name)
                 return user
         return None
+<<<<<<< HEAD
+=======
+
+    def get_healthy_users(self):
+        return self.get_users_for_state(State.HEALTHY)
+
+    def get_infected_users(self):
+        return self.get_users_for_state(State.INFECTED)
+
+    def get_users_for_state(self, state):
+        if self.game_state == GameState.NOT_STARTED:
+            return None
+        else:
+            infected_users = []
+            for user in self.users:
+                if user.state == state:
+                    infected_users.append(user)
+            return infected_users
+>>>>>>> ccc4276fdf9201a250d8491d699da1c99beb1538
 
     ### ROUND LOGIC
 
     def start(self):
         print("Starting game")
+        self.game_state = GameState.STARTED
         self.round = 1
         self.nbPlayersWhoPlayedTheirTurn = 0
 
@@ -55,7 +75,7 @@ class Room:
 
         self.update_users_state()
         self.reset_round()
-        return self.check_game_status()
+        return self.update_game_status()
 
     def reset_round(self):
         self.round += 1
@@ -81,13 +101,13 @@ class Room:
                 for user in users_in_location:
                     user.infect()
 
-    def check_game_status(self):
+    def update_game_status(self):
         if self.check_all_same_state(self.users, State.HEALTHY):
-            return GameState.GOOD_GUYS_WON
+            self.game_state = GameState.GOOD_GUYS_WON
         elif self.check_all_same_state(self.users, State.INFECTED):
-            return GameState.BAD_GUYS_WON
+            self.game_state = GameState.BAD_GUYS_WON
         else:
-            return GameState.PLAYING
+            self.game_state = GameState.PLAYING
 
     @staticmethod
     def check_all_same_state(users, state):
@@ -100,7 +120,10 @@ class Room:
     def get_locations_dict(users):
         locations_dict = dict()
         for user in users:
-            locations_dict[user.location] = user
+            if user.location in locations_dict:
+                locations_dict[user.location].append(user)
+            else:
+                locations_dict[user.location] = [user]
         return locations_dict
 
     @staticmethod
