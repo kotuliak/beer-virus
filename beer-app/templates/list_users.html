@@ -1,5 +1,5 @@
 {% for user in users %}
-    {% if user.name == your_user.vote %}
+    {% if user.name == your_user.vote.name %}
     <li class="danger">{{ user.name }}<button id="but{{user.name}}">QUARANTINE HIM!!!</button></li>
     {% else %}
     <li>{{ user.name }}<button id="but{{user.name}}">QUARANTINE HIM!!!</button></li>

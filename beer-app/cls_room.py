@@ -69,6 +69,7 @@ class Room:
 
         infected_user = random.choice(self.users)
         infected_user.infect()
+        self.reset_locations_and_votes()
         print("patient zero is " + infected_user.name)
 
     def next_round(self):
@@ -91,7 +92,13 @@ class Room:
         self.round += 1
         self.nbPlayersWhoMoved = 0
         self.nbPlayersWhoVoted = 0
+        self.reset_locations_and_votes()
         print("resetting round")
+
+    def reset_locations_and_votes(self):
+        for user in self.users:
+            user.vote = None
+            user.location = Location.HOME
 
     ### HANDLE USER INPUTS
 
@@ -102,7 +109,7 @@ class Room:
 
     def register_user_vote(self, name, vote):
         user = self.get_user(name)
-        user.register_vote(vote)
+        user.register_vote(self.get_user(vote))
         self.nbPlayersWhoVoted += 1
 
 
@@ -118,6 +125,7 @@ class Room:
         for nomination, users_who_voted in self.get_votes_dict(self.users).items():
             if len(users_who_voted)/len(self.users) > 0.500001:
                 nomination.quarantine()
+                nomination.state = State.HEALTHY
 
     def update_game_status(self):
         if self.check_all_same_state(self.users, State.HEALTHY):
@@ -138,6 +146,8 @@ class Room:
     def get_locations_dict(users):
         locations_dict = dict()
         for user in users:
+            if user.state == State.QUARANTINED:
+                continue
             if user.location in locations_dict:
                 locations_dict[user.location].append(user)
             else:
