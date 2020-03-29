@@ -9,10 +9,10 @@
     <div>
         <a href="{{ url_for('home') }}">Home</a>
     </div>
-    
+
     <h1>Welcome {{ user_name }} to room {{ room_id }}</h1>
 
-    <div id="user_text"> 
+    <div id="user_text">
         {% include 'user.html' %}
     </div>
 
@@ -23,12 +23,6 @@
     {% include 'choose_location.html' %}
 </body>
 <script>
-    console.log(window.location.href)
-    if (!window.location.href.toString().endsWith("?room_id={{ room_id }}&user_name={{your_user.name}}")) {
-        window.location.href = window.location.href + "?room_id={{ room_id }}&user_name={{your_user.name}}"
-    }
-    
-
     function locationClick(ev) {
         ev.preventDefault();
         console.log(ev.srcElement.innerText)
@@ -45,7 +39,6 @@
 
     }
 
-
     for (i = 0; i < 5; i++) {
         console.log('l' + i.toString())
         var butloc = document.getElementById('l' + i.toString());
@@ -53,6 +46,4 @@
         it = i.valueOf()
         butloc.addEventListener('click', locationClick);
     }
-
-
-  </script>
+</script>
