@@ -31,7 +31,7 @@ class Room:
             if name == user.name:
                 print("found user " + name)
                 return user
-        raise LookupError("User with name " + name + " isn't in the room.")
+        return None
 
     ### ROUND LOGIC
 

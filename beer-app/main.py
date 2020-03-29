@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, url_for
 from cls_room import Room
+from cls_user import User
 
 app = Flask(__name__)
 
@@ -34,8 +35,8 @@ def room():
         if room_id == room.id:
             your_user = room.get_user(user_name)
             if your_user is None:
-                your_user = room.create_user(user_name)
-            return render_template("room.html", room_id=room_id, your_user=your_user, users=room.users.values())
+                your_user = room.add_user(User(user_name))
+            return render_template("room.html", room_id=room_id, your_user=your_user, users=room.users)
 
     return "Error 404: Room not found."
 
@@ -63,7 +64,7 @@ def show_users():
     print(eval(request.data))
     for room in open_rooms:
         if int(eval(request.data)['roomid']) == room.id:
-            return render_template("list_users.html", users=room.users.values())
+            return render_template("list_users.html", users=room.users)
 
 
 @app.route("/add_location", methods=["POST"])
