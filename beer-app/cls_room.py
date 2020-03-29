@@ -32,8 +32,6 @@ class Room:
                 print("found user " + name)
                 return user
         return None
-<<<<<<< HEAD
-=======
 
     def get_healthy_users(self):
         return self.get_users_for_state(State.HEALTHY)
@@ -50,7 +48,6 @@ class Room:
                 if user.state == state:
                     infected_users.append(user)
             return infected_users
->>>>>>> ccc4276fdf9201a250d8491d699da1c99beb1538
 
     ### ROUND LOGIC
 
