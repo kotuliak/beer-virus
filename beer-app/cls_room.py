@@ -10,6 +10,7 @@ class Room:
         self.game_state = GameState.NOT_STARTED
         self.round = -1
         self.nbPlayersWhoPlayedTheirTurn = -1
+        self.nbPlayersWhoVoted = -1
 
     ### ROOM LOGIC
 
@@ -56,6 +57,7 @@ class Room:
         self.game_state = GameState.PLAYING
         self.round = 1
         self.nbPlayersWhoPlayedTheirTurn = 0
+        self.nbPlayersWhoVoted = 0
 
         for user in self.users:
             user.heal()
@@ -65,10 +67,15 @@ class Room:
         print("patient zero is " + infected_user.name)
 
     def next_round(self):
-        remaining = len(self.users) - self.nbPlayersWhoPlayedTheirTurn
-        if remaining > 0:
-            print("Still waiting on " + str(remaining) + " players to play their turn.")
-            raise Exception("Still waiting on " + str(remaining) + " players to play their turn.")
+        remaining_locations = len(self.users) - self.nbPlayersWhoPlayedTheirTurn
+        if remaining_locations > 0:
+            print("Still waiting on " + str(remaining_locations) + " players to choose location")
+            raise Exception("Still waiting on " + str(remaining_locations) + " players to choose location")
+
+        remaining_votes = len(self.users) - self.nbPlayersWhoVoted
+        if remaining_votes > 0:
+            print("Still waiting on " + str(remaining_votes) + " players to choose nomination for quarantine")
+            raise Exception("Still waiting on " + str(remaining_votes) + " players to choose nomination for quarantine")
 
         self.update_users_state()
         self.reset_round()
@@ -77,6 +84,7 @@ class Room:
     def reset_round(self):
         self.round += 1
         self.nbPlayersWhoPlayedTheirTurn = 0
+        self.nbPlayersWhoVoted = 0
         print("resetting round")
 
     ### HANDLE USER INPUTS
@@ -86,8 +94,9 @@ class Room:
         user.move_location(location)
         self.nbPlayersWhoPlayedTheirTurn += 1
 
-    def register_user_vote(self):
-        # TODO
+    def register_user_vote(self, name, nomination):
+        user = self.get_user(name)
+        user.register_vote(nomination)
         return None
 
     ### GAME LOGIC
