@@ -102,13 +102,7 @@
     {% include 'choose_location.html' %}
     </div>
 
-    <p>
-    </p>
-    <br>
      
-    {% if your_user.admin %}
-        {% include 'admin.html' %}
-    {% endif %}
 </div>
     <script>
         
@@ -130,10 +124,7 @@
             request.send(JSON.stringify({name:"{{your_user.name}}", roomid:"{{room_id}}"}));
         }, 1000);
 
-        var reset = document.getElementById('reset')
-        reset.addEventListener('click', resetGame);
-        var next = document.getElementById('next')
-        next.addEventListener('click', nextGame);
+        
     </script>
 
     <div>
