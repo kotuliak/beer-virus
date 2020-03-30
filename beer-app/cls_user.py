@@ -23,6 +23,7 @@ class User:
 	def quarantine(self):
 		print("User " + self.name + " is QUARANTINED")
 		self.state = State.QUARANTINED
+		self.quarantineVisits += 1
 
 	def register_vote(self, new_vote):
 		print("User " + self.name + " voted for " + str(new_vote))

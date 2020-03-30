@@ -113,7 +113,6 @@ class Room:
         user = self.get_user(name)
         user.register_vote(self.get_user(vote))
         self.nbPlayersWhoVoted += 1
-    
 
     ### GAME LOGIC
 
