@@ -24,3 +24,10 @@ head {
 .warning {color: orange;}
 .danger {color: red;}
 .default {color: black;}
+
+.center {
+  width: 50%;
+  margin: auto;
+  
+  padding: 10px;
+}

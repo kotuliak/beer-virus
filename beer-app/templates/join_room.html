@@ -5,13 +5,13 @@
     <title>Joining Room</title>
 </head>
 <body>
-
+    <div class="center">
 <p>About to join room {{ room_id }}</p>
 <form action="/room" method="POST" id="join-room">
     <p><input type="text" name="user_name"> Enter your name</p>
     <input type="number" name="room_id" value={{ room_id }} hidden>
     <input type="submit" value="Join Room">
 </form>
-
+</div>
 </body>
 </html>
