@@ -64,6 +64,7 @@ class Room:
         self.newcases = 1
         self.nbPlayersWhoMoved = 0
         self.nbPlayersWhoVoted = 0
+        self.selectioncheck = False
         self.reset_locations_and_votes()
         for user in self.users:
             user.heal()
@@ -76,13 +77,8 @@ class Room:
         patient0.infect()
 
     def next_round(self):
-        remaining_locations = len(self.users) - self.nbPlayersWhoMoved
-        if remaining_locations > 0:
-            raise Exception("Still waiting on " + str(remaining_locations) + " players to choose location")
-
-        remaining_votes = len(self.users) - self.nbPlayersWhoVoted
-        if remaining_votes > 0:
-            raise Exception("Still waiting on " + str(remaining_votes) + " players to choose nomination for quarantine")
+        if self.selectioncheck == False:
+            raise Exception("Still waiting on players to choose location or quarantine")
 
         self.update_quarantine()
         self.update_users_state()
@@ -101,6 +97,7 @@ class Room:
         for user in self.users:
             user.vote = None
             user.location = Location.HOME
+            self.selectioncheck = False
 
     ### HANDLE USER INPUTS
 
@@ -108,11 +105,13 @@ class Room:
         user = self.get_user(name)
         user.move_location(Location[location])
         self.nbPlayersWhoMoved += 1
+        self.selection_check()
 
     def register_user_vote(self, name, vote):
         user = self.get_user(name)
         user.register_vote(self.get_user(vote))
         self.nbPlayersWhoVoted += 1
+        self.selection_check()
 
     ### GAME LOGIC
 
@@ -159,6 +158,12 @@ class Room:
         self.infected = count
         self.newcases = count - before
 
+    def selection_check(self):
+        remaining_locations = len(self.users) - self.nbPlayersWhoMoved
+        remaining_votes = len(self.users) - self.nbPlayersWhoVoted
+        if remaining_locations == remaining_votes and remaining_votes == 0:
+            self.selectioncheck = True
+        
 
     @staticmethod
     def check_all_same_state(users, state):
