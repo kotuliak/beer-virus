@@ -7,7 +7,8 @@
 </head>
 <body>
 <div class="center">
-<h1> Welcome to BeerVirus </h1>
+<h1>Welcome to the BeerVirus game!</h1>
+<h2>Play with your friends during group video calls.</h2>
 
 <a href="{{ url_for('about') }}">About</a>
 
@@ -21,6 +22,29 @@
     <p><input type="text" name="room_id"> Room ID</p>
     <input type="submit" value="Join room">
 </form>
+</div>
+
+<div>
+    <p>
+        Gameplay:
+    </p>
+    <p>        
+        One player is randomly infected at the beggining of the game and nobody else knows who this is.
+    </p>
+    <p>        
+        The objective of the other players in to identify who patient zero is and to put him into quarantine for 2 rounds.
+    </p>           
+        Patient zero's objective is to infect all other players before he is discovered and cured.
+    </p>
+    <p>          
+        Everybody starts at HOME and each round selects a location where they go. 
+        If patient zero or any other player who got infected selects the same location as you, you get infected as well. You don't see who selected which location.
+        If you select the HOME location you don't risk getting infected, however, you can only select it after you have been to the location SUPERMARKET.
+                
+        After a few rounds you will be able to vote who gets put into quarantine for one round. Quarantine will cure you, except if you are patient zero, who has to be put there twice.
+                
+        Communicate through the video chat and try to discover who is lying and is spreading the disease! Don't give all your steps away, otherwise patient zero will know exactly where to go.         
+    </p>
 </div>
 
 </body>
