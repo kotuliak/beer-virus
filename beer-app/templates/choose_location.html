@@ -1,8 +1,11 @@
 Pick Locations:
 {% for location in locations %}
 {% if your_user.stayhome or loop.index != 1 %}
-
+{% if your_user.location.name ==  location%}
+<button class="danger" id="l{{loop.index - 1}}">{{location}}</button>
+{% else %}
 <button id="l{{loop.index - 1}}">{{location}}</button>
+{% endif %}
 {% endif %}
 {% endfor %}
 <script>
@@ -12,3 +15,24 @@ Pick Locations:
             butloc.addEventListener('click', locationClick);}
         }
 </script>
+
+
+<p>
+</p>
+<br>
+
+{% if your_user.admin %}
+<button id="reset">RESET GAME</button>
+<script>
+    var reset = document.getElementById('reset')
+    reset.addEventListener('click', resetGame);
+</script>
+{% endif %}
+
+{% if your_user.admin and room.selectioncheck%}
+<button id="next">NEXT ROUND</button>
+<script>
+    var reset = document.getElementById('next')
+    reset.addEventListener('click', nextGame);
+</script>
+{% endif %}

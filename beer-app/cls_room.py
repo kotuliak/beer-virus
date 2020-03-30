@@ -12,6 +12,7 @@ class Room:
         self.nbPlayersWhoMoved = -1
         self.nbPlayersWhoVoted = -1
         self.round = 0
+        self.selectioncheck = False
         self.infected = 0
         self.newcases = 0
 
@@ -64,6 +65,7 @@ class Room:
         self.newcases = 1
         self.nbPlayersWhoMoved = 0
         self.nbPlayersWhoVoted = 0
+        self.selectioncheck = False
         self.reset_locations_and_votes()
         for user in self.users:
             user.heal()
@@ -76,14 +78,6 @@ class Room:
         patient0.infect()
 
     def next_round(self):
-        remaining_locations = len(self.users) - self.nbPlayersWhoMoved
-        if remaining_locations > 0:
-            raise Exception("Still waiting on " + str(remaining_locations) + " players to choose location")
-
-        remaining_votes = len(self.users) - self.nbPlayersWhoVoted
-        if remaining_votes > 0:
-            raise Exception("Still waiting on " + str(remaining_votes) + " players to choose nomination for quarantine")
-
         self.update_quarantine()
         self.update_users_state()
         self.heal_quarantined()
@@ -95,6 +89,7 @@ class Room:
         self.round += 1
         self.nbPlayersWhoMoved = 0
         self.nbPlayersWhoVoted = 0
+        self.selectioncheck = False
         self.reset_locations_and_votes()
 
     def reset_locations_and_votes(self):
@@ -102,17 +97,22 @@ class Room:
             user.vote = None
             user.location = Location.HOME
 
+
     ### HANDLE USER INPUTS
 
     def move_user_location(self, name, location):
         user = self.get_user(name)
         user.move_location(Location[location])
         self.nbPlayersWhoMoved += 1
+        self.selection_check()
+        print(self.nbPlayersWhoMoved + "number of players who moved")
 
     def register_user_vote(self, name, vote):
         user = self.get_user(name)
         user.register_vote(self.get_user(vote))
         self.nbPlayersWhoVoted += 1
+        self.selection_check()
+        print(self.nbPlayersWhoVoted + "number of players who voted")
 
     ### GAME LOGIC
 
@@ -159,6 +159,10 @@ class Room:
         self.infected = count
         self.newcases = count - before
 
+    def selection_check(self):
+        if self.nbPlayersWhoMoved == len(self.users) and self.nbPlayersWhoVoted == len(self.users):
+            self.selectioncheck = True
+        
 
     @staticmethod
     def check_all_same_state(users, state):
