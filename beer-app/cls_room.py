@@ -12,6 +12,7 @@ class Room:
         self.nbPlayersWhoMoved = -1
         self.nbPlayersWhoVoted = -1
         self.round = 0
+        self.selectioncheck = False
         self.infected = 0
         self.newcases = 0
 
