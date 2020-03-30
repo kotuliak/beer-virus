@@ -68,6 +68,8 @@ class Room:
         for user in self.users:
             user.heal()
             user.quarantineVisits = 0
+            user.patient0 = False
+            user.stayhome = False
 
         patient0 = random.choice(self.users)
         patient0.patient0 = True
@@ -112,8 +114,6 @@ class Room:
         user.register_vote(self.get_user(vote))
         self.nbPlayersWhoVoted += 1
 
-    
-
     ### GAME LOGIC
 
     def update_users_state(self):
@@ -127,7 +127,6 @@ class Room:
             if location == Location.SUPERMARKET:
                 for user in users_in_location:
                     user.stayhome = True
-
 
     def update_quarantine(self):
         for nomination, users_who_voted in self.get_votes_dict(self.users).items():
@@ -144,8 +143,7 @@ class Room:
 
     def heal_quarantined(self):
         for user in self.users:
-            if user.patient0:
-                user.quarantineVisits += 1
+            if user.patient0 == True:
                 user.state = State.INFECTED
                 if user.quarantineVisits == 2:
                     user.state = State.HEALTHY
