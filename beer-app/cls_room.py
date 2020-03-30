@@ -149,7 +149,7 @@ class Room:
                 user.quarantineVisits += 1
                 if user.quarantineVisits == 2:
                     user.state = State.HEALTHY
-            else user.state == State.QUARANTINED:
+            elif user.state == State.QUARANTINED:
                 user.state = State.HEALTHY
 
     def count_infected(self):
