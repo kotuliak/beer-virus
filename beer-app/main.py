@@ -39,7 +39,7 @@ def room():
                 your_user = room.add_user(User(user_name))
             
             locations = [Location(i).name for i in range(len(Location))]
-            return render_template("room.html", room_id=room_id, your_user=your_user, users=room.users, locations=locations)
+            return render_template("room.html", room_id=room_id, your_user=your_user, users=room.users, locations=locations, room=room)
 
     return "Error 404: Room not found."
 
@@ -74,7 +74,7 @@ def show_your_user():
     print(eval(request.data))
     for room in open_rooms:
         if int(eval(request.data)['roomid']) == room.id:
-            return render_template("user.html", your_user=room.get_user(eval(request.data)['name']))
+            return render_template("user.html", your_user=room.get_user(eval(request.data)['name']), room=room)
 
 
 @app.route("/add_location", methods=["POST"])
@@ -83,7 +83,7 @@ def add_location():
     for room in open_rooms:
         if int(eval(request.data)['roomid']) == room.id:
             room.move_user_location(eval(request.data)['name'], eval(request.data)['location'])
-            return render_template("user.html", your_user=room.get_user(eval(request.data)['name']))
+            return render_template("user.html", your_user=room.get_user(eval(request.data)['name']), room=room)
 
 @app.route("/add_quarantine", methods=["POST"])
 def add_quarantine():
