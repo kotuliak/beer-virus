@@ -82,7 +82,7 @@ def show_locations():
     for room in open_rooms:
         if int(eval(request.data)['roomid']) == room.id:
             locations = [Location(i).name for i in range(len(Location))]
-            return render_template("choose_location.html", your_user=room.get_user(eval(request.data)['name']), locations=locations)
+            return render_template("choose_location.html", your_user=room.get_user(eval(request.data)['name']), locations=locations, room=room)
 
 
 @app.route("/add_location", methods=["POST"])
