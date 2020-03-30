@@ -3,7 +3,6 @@ from state import State
 from game_state import GameState
 from location import Location
 
-
 class Room:
     def __init__(self):
         self.id = random.randrange(0, 10000)
@@ -150,7 +149,7 @@ class Room:
                 if user.quarantineVisits == 2:
                     user.state = State.HEALTHY
             elif user.state == State.QUARANTINED:
-                user.state = State.HEALTHY
+                    user.state = State.HEALTHY
 
     def count_infected(self):
         before = self.infected
@@ -159,12 +158,11 @@ class Room:
             if user.state == State.INFECTED:
                 count += 1
         self.infected = count
-        self.newcases = count - before
+        self.newcases = max(count - before, 0)
 
     def selection_check(self):
         if len(self.nbPlayersWhoMoved) == len(self.users) and len(self.nbPlayersWhoVoted) == len(self.users):
             self.selectioncheck = True
-        
 
     @staticmethod
     def check_all_same_state(users, state):
