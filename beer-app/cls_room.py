@@ -78,9 +78,6 @@ class Room:
         patient0.infect()
 
     def next_round(self):
-        if self.selectioncheck == False:
-            raise Exception("Still waiting on players to choose location or quarantine")
-
         self.update_quarantine()
         self.update_users_state()
         self.heal_quarantined()
@@ -92,13 +89,14 @@ class Room:
         self.round += 1
         self.nbPlayersWhoMoved = 0
         self.nbPlayersWhoVoted = 0
+        self.selectioncheck = False
         self.reset_locations_and_votes()
 
     def reset_locations_and_votes(self):
         for user in self.users:
             user.vote = None
             user.location = Location.HOME
-            self.selectioncheck = False
+
 
     ### HANDLE USER INPUTS
 
@@ -107,12 +105,14 @@ class Room:
         user.move_location(Location[location])
         self.nbPlayersWhoMoved += 1
         self.selection_check()
+        print(self.nbPlayersWhoMoved + "number of players who moved")
 
     def register_user_vote(self, name, vote):
         user = self.get_user(name)
         user.register_vote(self.get_user(vote))
         self.nbPlayersWhoVoted += 1
         self.selection_check()
+        print(self.nbPlayersWhoVoted + "number of players who voted")
 
     ### GAME LOGIC
 
@@ -160,9 +160,7 @@ class Room:
         self.newcases = count - before
 
     def selection_check(self):
-        remaining_locations = len(self.users) - self.nbPlayersWhoMoved
-        remaining_votes = len(self.users) - self.nbPlayersWhoVoted
-        if remaining_locations == remaining_votes and remaining_votes == 0:
+        if self.nbPlayersWhoMoved == len(self.users) and self.nbPlayersWhoVoted == len(self.users):
             self.selectioncheck = True
         
 
