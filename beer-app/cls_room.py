@@ -9,8 +9,8 @@ class Room:
         self.id = random.randrange(0, 10000)
         self.users = []
         self.game_state = GameState.NOT_STARTED
-        self.nbPlayersWhoMoved = -1
-        self.nbPlayersWhoVoted = -1
+        self.nbPlayersWhoMoved = []
+        self.nbPlayersWhoVoted = []
         self.round = 0
         self.selectioncheck = False
         self.infected = 0
@@ -63,8 +63,8 @@ class Room:
         self.round = 1
         self.infected = 1
         self.newcases = 1
-        self.nbPlayersWhoMoved = 0
-        self.nbPlayersWhoVoted = 0
+        self.nbPlayersWhoMoved = []
+        self.nbPlayersWhoVoted = []
         self.selectioncheck = False
         self.reset_locations_and_votes()
         for user in self.users:
@@ -87,8 +87,8 @@ class Room:
 
     def reset_round(self):
         self.round += 1
-        self.nbPlayersWhoMoved = 0
-        self.nbPlayersWhoVoted = 0
+        self.nbPlayersWhoMoved = []
+        self.nbPlayersWhoVoted = []
         self.selectioncheck = False
         self.reset_locations_and_votes()
 
@@ -103,16 +103,18 @@ class Room:
     def move_user_location(self, name, location):
         user = self.get_user(name)
         user.move_location(Location[location])
-        self.nbPlayersWhoMoved += 1
+        if user not in self.nbPlayersWhoMoved:
+            self.nbPlayersWhoMoved.append(user)
         self.selection_check()
-        print(self.nbPlayersWhoMoved + "number of players who moved")
+        print(str(self.nbPlayersWhoMoved) + "number of players who moved")
 
     def register_user_vote(self, name, vote):
         user = self.get_user(name)
         user.register_vote(self.get_user(vote))
-        self.nbPlayersWhoVoted += 1
+        if user not in self.nbPlayersWhoVoted:
+            self.nbPlayersWhoVoted.append(user)
         self.selection_check()
-        print(self.nbPlayersWhoVoted + "number of players who voted")
+        print(str(self.nbPlayersWhoVoted) + "number of players who voted")
 
     ### GAME LOGIC
 
@@ -160,7 +162,7 @@ class Room:
         self.newcases = count - before
 
     def selection_check(self):
-        if self.nbPlayersWhoMoved == len(self.users) and self.nbPlayersWhoVoted == len(self.users):
+        if len(self.nbPlayersWhoMoved) == len(self.users) and len(self.nbPlayersWhoVoted) == len(self.users):
             self.selectioncheck = True
         
 
