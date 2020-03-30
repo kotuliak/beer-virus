@@ -15,24 +15,29 @@
     
         function usersShow() {
           var data = this.responseText;
-          console.log(data)
           document.getElementById("users").innerHTML = data;
           var scripts = document.getElementById("users").getElementsByTagName('script');
             for (var ix = 0; ix < scripts.length; ix++) {
-                console.log(scripts[ix].text)
                 eval(scripts[ix].text);
             }
         }
 
         function yourUserShow() {
           var data = this.responseText;
-          console.log(data)
           document.getElementById("user_text").innerHTML = data;
+        }
+
+        function locationsShow() {
+          var data = this.responseText;
+          document.getElementById("chl").innerHTML = data;
+          var scripts = document.getElementById("chl").getElementsByTagName('script');
+            for (var ix = 0; ix < scripts.length; ix++) {
+                eval(scripts[ix].text);
+            }
         }
     
         function locationClick(ev) {
             ev.preventDefault();
-            console.log(ev.srcElement.innerText)
             var request = new XMLHttpRequest();
             request.addEventListener('load', locationShow);
             request.open('POST', {{ url_for('add_location')|tojson }});
@@ -41,14 +46,12 @@
     
         function locationShow() {
           var data = this.responseText;
-          console.log(data)
           document.getElementById("user_text").innerHTML = data;
     
         }
     
         function quarantineClick(ev) {
             ev.preventDefault();
-            console.log(ev.srcElement.id.slice(3))
             var request = new XMLHttpRequest();
             request.addEventListener('load', quarantineShow);
             request.open('POST', {{ url_for('add_quarantine')|tojson }});
@@ -57,11 +60,9 @@
     
         function quarantineShow() {
             var data = this.responseText;
-            console.log(data)
             document.getElementById("users").innerHTML = data;
             var scripts = document.getElementById("users").getElementsByTagName('script');
             for (var ix = 0; ix < scripts.length; ix++) {
-                console.log(scripts[ix].text)
                 eval(scripts[ix].text);
             }
         }
@@ -97,7 +98,9 @@
         {% include 'list_users.html' %}
     </ul>
 
+    <div id="chl">
     {% include 'choose_location.html' %}
+    </div>
 
     <p>
     </p>
@@ -108,13 +111,7 @@
     {% endif %}
 </div>
     <script>
-        for (i = 0; i < {{locations | length}}; i++) {
-            console.log('l' + i.toString())
-            var butloc = document.getElementById('l' + i.toString());
-            console.log(butloc)
-            it = i.valueOf()
-            butloc.addEventListener('click', locationClick);
-        }
+        
 
         window.setInterval(function() {
             var request = new XMLHttpRequest();
@@ -125,6 +122,11 @@
             var request = new XMLHttpRequest();
             request.addEventListener('load', yourUserShow);
             request.open('POST', {{ url_for('show_your_user')|tojson }});
+            request.send(JSON.stringify({name:"{{your_user.name}}", roomid:"{{room_id}}"}));
+
+            var request = new XMLHttpRequest();
+            request.addEventListener('load', locationsShow);
+            request.open('POST', {{ url_for('show_locations')|tojson }});
             request.send(JSON.stringify({name:"{{your_user.name}}", roomid:"{{room_id}}"}));
         }, 1000);
 

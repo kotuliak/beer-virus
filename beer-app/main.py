@@ -76,6 +76,14 @@ def show_your_user():
         if int(eval(request.data)['roomid']) == room.id:
             return render_template("user.html", your_user=room.get_user(eval(request.data)['name']), room=room)
 
+@app.route("/show_locations", methods=["POST"])
+def show_locations():
+    print(eval(request.data))
+    for room in open_rooms:
+        if int(eval(request.data)['roomid']) == room.id:
+            locations = [Location(i).name for i in range(len(Location))]
+            return render_template("choose_location.html", your_user=room.get_user(eval(request.data)['name']), locations=locations)
+
 
 @app.route("/add_location", methods=["POST"])
 def add_location():

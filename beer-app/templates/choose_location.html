@@ -1,4 +1,14 @@
 Pick Locations:
 {% for location in locations %}
+{% if your_user.stayhome or loop.index != 1 %}
+{{your_user.stayhome}}
 <button id="l{{loop.index - 1}}">{{location}}</button>
+{% endif %}
 {% endfor %}
+<script>
+    for (i = 0; i < {{locations | length}}; i++) {
+            var butloc = document.getElementById('l' + i.toString());
+            if (butloc != null) {
+            butloc.addEventListener('click', locationClick);}
+        }
+</script>
