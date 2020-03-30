@@ -34,10 +34,8 @@ class Room:
             self.add_user(user)
 
     def get_user(self, name):
-        print("trying to get user " + name)
         for user in self.users:
             if name == user.name:
-                print("found user " + name)
                 return user
         return None
 
@@ -60,7 +58,6 @@ class Room:
     ### ROUND LOGIC
 
     def start(self):
-        print("Starting game")
         self.game_state = GameState.PLAYING
         self.round = 1
         self.infected = 1
@@ -70,6 +67,7 @@ class Room:
         self.reset_locations_and_votes()
         for user in self.users:
             user.heal()
+            user.quarantineVisits = 0
 
         patient0 = random.choice(self.users)
         patient0.patient0 = True
@@ -84,7 +82,6 @@ class Room:
         if remaining_votes > 0:
             raise Exception("Still waiting on " + str(remaining_votes) + " players to choose nomination for quarantine")
 
-        
         self.update_quarantine()
         self.update_users_state()
         self.heal_quarantined()
@@ -97,7 +94,6 @@ class Room:
         self.nbPlayersWhoMoved = 0
         self.nbPlayersWhoVoted = 0
         self.reset_locations_and_votes()
-        print("resetting round")
 
     def reset_locations_and_votes(self):
         for user in self.users:
@@ -116,6 +112,8 @@ class Room:
         user.register_vote(self.get_user(vote))
         self.nbPlayersWhoVoted += 1
 
+    
+
     ### GAME LOGIC
 
     def update_users_state(self):
@@ -123,12 +121,13 @@ class Room:
             if location == Location.HOME:
                 for user in users_in_location:
                     user.stayhome = False
+            elif self.contains_infected(users_in_location):
+                for user in users_in_location:
+                    user.infect()
             if location == Location.SUPERMARKET:
                 for user in users_in_location:
                     user.stayhome = True
-            if self.contains_infected(users_in_location):
-                for user in users_in_location:
-                    user.infect()
+
 
     def update_quarantine(self):
         for nomination, users_who_voted in self.get_votes_dict(self.users).items():
