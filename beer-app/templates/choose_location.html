@@ -1,7 +1,7 @@
 Pick Locations:
 {% for location in locations %}
 {% if your_user.stayhome or loop.index != 1 %}
-{{your_user.stayhome}}
+
 <button id="l{{loop.index - 1}}">{{location}}</button>
 {% endif %}
 {% endfor %}
