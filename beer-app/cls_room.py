@@ -9,9 +9,11 @@ class Room:
         self.id = random.randrange(0, 10000)
         self.users = []
         self.game_state = GameState.NOT_STARTED
-        self.round = -1
         self.nbPlayersWhoMoved = -1
         self.nbPlayersWhoVoted = -1
+        self.round = 0
+        self.infected = 0
+        self.newcases = 0
 
     ### ROOM LOGIC
 
@@ -61,31 +63,32 @@ class Room:
         print("Starting game")
         self.game_state = GameState.PLAYING
         self.round = 1
+        self.infected = 1
+        self.newcases = 1
         self.nbPlayersWhoMoved = 0
         self.nbPlayersWhoVoted = 0
-
+        self.reset_locations_and_votes()
         for user in self.users:
             user.heal()
 
-        infected_user = random.choice(self.users)
-        infected_user.infect()
-        self.reset_locations_and_votes()
-        print("patient zero is " + infected_user.name)
+        patient0 = random.choice(self.users)
+        patient0.patient0 = True
+        patient0.infect()
 
     def next_round(self):
         remaining_locations = len(self.users) - self.nbPlayersWhoMoved
         if remaining_locations > 0:
-            print("Still waiting on " + str(remaining_locations) + " players to choose location")
             raise Exception("Still waiting on " + str(remaining_locations) + " players to choose location")
 
         remaining_votes = len(self.users) - self.nbPlayersWhoVoted
         if remaining_votes > 0:
-            print("Still waiting on " + str(remaining_votes) + " players to choose nomination for quarantine")
             raise Exception("Still waiting on " + str(remaining_votes) + " players to choose nomination for quarantine")
 
+        
         self.update_quarantine()
         self.update_users_state()
         self.heal_quarantined()
+        self.count_infected()
         self.reset_round()
         return self.update_game_status()
 
@@ -117,6 +120,12 @@ class Room:
 
     def update_users_state(self):
         for location, users_in_location in self.get_locations_dict(self.users).items():
+            if location == Location.HOME:
+                for user in users_in_location:
+                    user.stayhome = False
+            if location == Location.SUPERMARKET:
+                for user in users_in_location:
+                    user.stayhome = True
             if self.contains_infected(users_in_location):
                 for user in users_in_location:
                     user.infect()
@@ -136,8 +145,22 @@ class Room:
 
     def heal_quarantined(self):
         for user in self.users:
-            if user.state == State.QUARANTINED:
+            if user.patient0:
+                user.quarantineVisits += 1
+                if user.quarantineVisits == 2:
+                    user.state = State.HEALTHY
+            else user.state == State.QUARANTINED:
                 user.state = State.HEALTHY
+
+    def count_infected(self):
+        before = self.infected
+        count = 0
+        for user in self.users:
+            if user.state == State.INFECTED:
+                count += 1
+        self.infected = count
+        self.newcases = count - before
+
 
     @staticmethod
     def check_all_same_state(users, state):

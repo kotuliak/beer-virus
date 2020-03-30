@@ -8,6 +8,9 @@ class User:
 		self.location = Location.HOME
 		self.vote = None
 		self.admin = False
+		self.patient0 = False
+		self.quarantineVisits = 0
+		self.stayhome = False
 
 	def heal(self):
 		print("User " + self.name + " is HEALTHY")
