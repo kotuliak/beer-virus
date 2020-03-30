@@ -147,6 +147,7 @@ class Room:
         for user in self.users:
             if user.patient0:
                 user.quarantineVisits += 1
+                user.state = State.INFECTED
                 if user.quarantineVisits == 2:
                     user.state = State.HEALTHY
             elif user.state == State.QUARANTINED:
